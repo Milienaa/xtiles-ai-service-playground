@@ -136,6 +136,11 @@ async function sendStateful(
   const composedUser = buildUserPrompt(userText);
   const resp = await chat.sendMessage({ message: composedUser });
 
+  console.groupCollapsed('%c[AI RAW][STATEFUL] model output', 'color:#4ade80');
+  console.log('text (MD):\n', (resp.text ?? '').trim());
+  console.log('usage:', resp.usageMetadata);
+  console.groupEnd();
+
   const u = readUsage(resp);
   ACC_INPUT += u.prompt;
   ACC_OUTPUT += u.output;
@@ -156,6 +161,10 @@ async function sendStateful(
 
   if (md) {
     const sent = await sendMarkdownToXtiles(md, currentProjectId);
+    console.groupCollapsed('%c[POST → xTiles][STATEFUL]', 'color:#f59e0b');
+    console.log('projectId:', sent.projectId, 'url:', sent.url);
+    console.groupEnd();
+
     final.projectId = sent.projectId ?? currentProjectId;
     final.projectUrl = sent.url ?? final.projectUrl;
   }
@@ -202,6 +211,10 @@ async function sendFullHistory(
       systemInstruction: SYSTEM_INSTRUCTION,
       input: inputTurns,
     });
+    console.groupCollapsed('%c[AI RAW][FULL_HISTORY] model output', 'color:#60a5fa');
+  console.log('text (MD):\n', (resp.text ?? '').trim());
+  console.log('usage:', resp.usageMetadata);
+  console.groupEnd();
   } else {
     // Fallback: одноразовий Chat, але всю історію явно додаємо контентом
     const oneOff = ai.chats.create({
@@ -238,6 +251,10 @@ async function sendFullHistory(
 
   if (md) {
     const sent = await sendMarkdownToXtiles(md, currentProjectId);
+    console.groupCollapsed('%c[POST → xTiles][FULL_HISTORY]', 'color:#f59e0b');
+    console.log('projectId:', sent.projectId, 'url:', sent.url);
+    console.groupEnd();
+
     final.projectId = sent.projectId ?? currentProjectId;
     final.projectUrl = sent.url ?? final.projectUrl;
   }

@@ -34,6 +34,7 @@ const App: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottom = () =>
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
@@ -102,20 +103,23 @@ const App: React.FC = () => {
         sources: response.sources,
       };
       setMessages((prev) => [...prev, newAssistantMessage]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to send message:', error);
+      const msg =
+        (error?.response?.status ? `HTTP ${error.response.status}: ` : '') +
+        (error?.message || String(error));
       setMessages((prev) => [
         ...prev,
         {
           id: (Date.now() + 1).toString(),
           role: MessageRole.MODEL,
-          content: 'Вибачте, виникла помилка.',
+          content: `Вибачте, виникла помилка.\n\n**Деталі:** ${msg}`,
         },
       ]);
     } finally {
       setIsLoading(false);
     }
-  };
+  }; // <-- чітке закриття handleSendMessage
 
   return (
     <div className="h-screen w-screen bg-gray-900 text-gray-100 flex font-sans">
@@ -173,12 +177,12 @@ const App: React.FC = () => {
             </label>
           </div>
 
-        <button
-          onClick={resetStateForNewSession}
-          className="mt-4 text-xs px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700"
-        >
-          Новий діалог (reset session)
-        </button>
+          <button
+            onClick={resetStateForNewSession}
+            className="mt-4 text-xs px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700"
+          >
+            Новий діалог (reset session)
+          </button>
         </div>
 
         {/* Token Usage */}
@@ -205,7 +209,7 @@ const App: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs text-gray-500">
-                * Cached — реальна кількість токенів, відданих з кешу (usageMetadata.cachedContentTokenCount).
+                * Cached - кількість токенів, відданих з кешу (usageMetadata.cachedContentTokenCount).
               </p>
             </div>
           ) : (
