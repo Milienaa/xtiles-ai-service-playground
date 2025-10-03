@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const [tokenCount, setTokenCount] =
     useState<{ input: number; output: number; cached: number } | null>(null);
 
-  // Перемикач режимів
+  // Перемикач режимів (залишаємо тільки STATEFUL)
   const [mode, setMode] = useState<GenerationMode>(GenerationMode.STATEFUL);
 
   // Один проект на чат
@@ -73,7 +73,7 @@ const App: React.FC = () => {
         projectId ?? undefined,
         {
           // У STATEFUL ця історія сервісом не передається в модель;
-          // у FULL_HISTORY — необхідна.
+          // у FULL_HISTORY — необхідна (UI прибрано, логіка лишилась).
           allMessages: messages.map((m) => ({
             role: m.role === MessageRole.USER ? 'user' : 'assistant',
             content: m.content,
@@ -166,6 +166,9 @@ const App: React.FC = () => {
               />
               <span>Stateful (ai.chats.create)</span>
             </label>
+
+            {/* Прибрано Full History з UI, логіку залишено закоментованою для можливого повернення */}
+            {/*
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
@@ -175,14 +178,18 @@ const App: React.FC = () => {
               />
               <span>Full History (без chat state)</span>
             </label>
+            */}
           </div>
 
+          {/* Кнопка reset прихована; логіку залишили закоментованою */}
+          {/*
           <button
             onClick={resetStateForNewSession}
             className="mt-4 text-xs px-3 py-1 rounded-md bg-gray-800 hover:bg-gray-700"
           >
             Новий діалог (reset session)
           </button>
+          */}
         </div>
 
         {/* Token Usage */}

@@ -15,6 +15,7 @@ if (!API_KEY) throw new Error('API_KEY environment variable not set');
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
+
 /** -------------------------------
  *  Режими генерації
  *  ------------------------------- */
@@ -224,6 +225,9 @@ async function sendFullHistory(
       model: 'gemini-2.5-flash',
       config: { systemInstruction: SYSTEM_INSTRUCTION },
     });
+
+    //getHistory()
+    //recordHistory()
 
     const historyBlob = JSON.stringify(structured, null, 2);
     resp = await oneOff.sendMessage({
