@@ -118,7 +118,7 @@ function getOrCreateStatefulChat() {
   if (!statefulChat) {
     statefulChat = ai.chats.create({
       model: 'gemini-2.5-flash',
-      config: { systemInstruction: SYSTEM_INSTRUCTION, temperature: 1.45 },
+      config: { systemInstruction: SYSTEM_INSTRUCTION, temperature: 1.45, thinkingConfig: { thinkingBudget: 0 } },
     });
     console.info('[AI MODE] STATEFUL Chat created');
   }
