@@ -117,7 +117,7 @@ function getOrCreateStatefulChat() {
   if (!statefulChat) {
     statefulChat = ai.chats.create({
       model: 'gemini-2.5-flash',
-      config: { systemInstruction: SYSTEM_INSTRUCTION },
+      config: { systemInstruction: SYSTEM_INSTRUCTION, temperature: 1.45 },
     });
     console.info('[AI MODE] STATEFUL Chat created');
   }
@@ -210,6 +210,9 @@ async function sendFullHistory(
       model: 'gemini-2.5-flash',
       systemInstruction: SYSTEM_INSTRUCTION,
       input: inputTurns,
+      config: {
+        temperature: 1.45,
+      },
     });
     console.groupCollapsed('%c[AI RAW][FULL_HISTORY] model output', 'color:#60a5fa');
   console.log('text (MD):\n', (resp.text ?? '').trim());
